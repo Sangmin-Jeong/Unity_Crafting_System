@@ -1169,6 +1169,30 @@ PrefabInstance:
       propertyPath: inventoryPanel
       value: 
       objectReference: {fileID: 2068507902}
+    - target: {fileID: 540513930469666130, guid: b89cffc577950a341b0ed9ce65c95287, type: 3}
+      propertyPath: _craftableItems.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 540513930469666130, guid: b89cffc577950a341b0ed9ce65c95287, type: 3}
+      propertyPath: _craftableItems.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: 8af5a64a9202a5a48b00c1a4993e2917, type: 2}
+    - target: {fileID: 540513930469666130, guid: b89cffc577950a341b0ed9ce65c95287, type: 3}
+      propertyPath: _craftableItems.Array.data[1]
+      value: 
+      objectReference: {fileID: 11400000, guid: c3d50aa4573e7914496c13ff4b27ca76, type: 2}
+    - target: {fileID: 540513930469666130, guid: b89cffc577950a341b0ed9ce65c95287, type: 3}
+      propertyPath: _craftableItems.Array.data[2]
+      value: 
+      objectReference: {fileID: 11400000, guid: 8edf88457d073c0468283afc8209338a, type: 2}
+    - target: {fileID: 540513930469666130, guid: b89cffc577950a341b0ed9ce65c95287, type: 3}
+      propertyPath: _craftableItems.Array.data[3]
+      value: 
+      objectReference: {fileID: 11400000, guid: e60bc6e2dc06bd64499d18c51e69720e, type: 2}
+    - target: {fileID: 540513930469666130, guid: b89cffc577950a341b0ed9ce65c95287, type: 3}
+      propertyPath: _craftableItems.Array.data[4]
+      value: 
+      objectReference: {fileID: 11400000, guid: fa0fc4773150f9948a8a0b25ae0b0744, type: 2}
     - target: {fileID: 549259603872145891, guid: b89cffc577950a341b0ed9ce65c95287, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0

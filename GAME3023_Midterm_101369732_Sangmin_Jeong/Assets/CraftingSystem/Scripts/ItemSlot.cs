@@ -157,6 +157,10 @@ public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                 TransferManager.Instance._targetSlot.item = item;
                 TransferManager.Instance._targetSlot.Count = 1;
                 Count += -1;
+                if (Count <= 0)
+                {
+                    item = null;
+                }
                 OnTransferred?.Invoke(this, EventArgs.Empty);
             }
             
