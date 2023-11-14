@@ -7,6 +7,8 @@ using UnityEngine;
 public class Item : ScriptableObject //Extending SO allows us to have an object which exists in the project, not in the scene
 {
     public Sprite icon;
+    public ItemType ItemType;
+    public int Id;
     [TextArea]
     public string description = "";
     public bool isConsumable = false;

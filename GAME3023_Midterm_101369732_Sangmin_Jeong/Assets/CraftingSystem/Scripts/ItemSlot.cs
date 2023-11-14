@@ -3,18 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Numerics;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-using Cursor = UnityEngine.UIElements.Cursor;
 using Quaternion = UnityEngine.Quaternion;
-using Vector3 = UnityEngine.Vector3;
 
 //Holds reference and count of items, manages their visibility in the Inventory panel
 public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,IPointerDownHandler,IPointerUpHandler
 {
     public Item item = null;
+    public int Id;
 
     [SerializeField]
     private TMPro.TextMeshProUGUI descriptionText;
@@ -42,6 +40,9 @@ public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     // Dragging
     private GameObject _dragingObject;
     [SerializeField] private bool isPicked = false;
+    
+    // Event
+    public EventHandler OnTransferred;
     
     void Start()
     {
@@ -154,8 +155,9 @@ public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             {
                 //Debug.Log("Drop");
                 TransferManager.Instance._targetSlot.item = item;
-                TransferManager.Instance._targetSlot.Count = Count;
-                Count = 0;
+                TransferManager.Instance._targetSlot.Count = 1;
+                Count += -1;
+                OnTransferred?.Invoke(this, EventArgs.Empty);
             }
             
         }

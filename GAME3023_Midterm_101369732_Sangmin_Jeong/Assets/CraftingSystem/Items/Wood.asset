@@ -10,8 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8290b75b2cbd6af45b7ad408c0444bf8, type: 3}
-  m_Name: Oil
+  m_Name: Wood
   m_EditorClassIdentifier: 
-  icon: {fileID: 21300000, guid: 07b8949c4c3faeb47a2328973bf9862f, type: 3}
-  description: A fundamental element in alchemy, and in fried chicken
+  icon: {fileID: 21300000, guid: c1e5e2f31c944cd4b8b5e8e2b661d565, type: 3}
+  ItemType: 0
+  Id: 0
+  description: A legendary substance which gives life
   isConsumable: 1
