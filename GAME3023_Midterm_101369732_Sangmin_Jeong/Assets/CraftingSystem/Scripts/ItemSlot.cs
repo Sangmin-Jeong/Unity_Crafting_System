@@ -1,13 +1,18 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Numerics;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Cursor = UnityEngine.UIElements.Cursor;
+using Quaternion = UnityEngine.Quaternion;
+using Vector3 = UnityEngine.Vector3;
 
 //Holds reference and count of items, manages their visibility in the Inventory panel
-public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,IPointerDownHandler,IPointerUpHandler
 {
     public Item item = null;
 
@@ -34,10 +39,20 @@ public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     [SerializeField]
     TextMeshProUGUI itemCountText;
 
-    // Start is called before the first frame update
+    private GameObject DragingObject;
+    [SerializeField] private bool isPicked = false; 
+    
     void Start()
     {
         UpdateGraphic();
+    }
+
+    private void Update()
+    {
+        if (DragingObject)
+        {
+            DragingObject.transform.position = Input.mousePosition;
+        }
     }
 
     //Change Icon and count
@@ -91,6 +106,32 @@ public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         {
             descriptionText.text = "";
             nameText.text = "";
+        }
+    }
+    
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        //Debug.Log("Pointer Up");
+        isPicked = false;
+
+        if (DragingObject)
+        {
+            Destroy(DragingObject);
+            itemIcon.raycastTarget = true;
+        }
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        //Debug.Log("Pointer Down");
+        if (!isPicked)
+        {
+            isPicked = true;
+            itemIcon.raycastTarget = false;
+            DragingObject = Instantiate(itemIcon, 
+                Input.mousePosition, 
+                Quaternion.identity, 
+                GameObject.Find("Canvas").gameObject.transform).gameObject;
         }
     }
 }
