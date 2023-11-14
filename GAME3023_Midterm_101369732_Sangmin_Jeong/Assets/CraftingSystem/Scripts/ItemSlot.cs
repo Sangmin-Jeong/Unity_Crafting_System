@@ -11,7 +11,8 @@ using Quaternion = UnityEngine.Quaternion;
 //Holds reference and count of items, manages their visibility in the Inventory panel
 public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,IPointerDownHandler,IPointerUpHandler
 {
-    public Item item = null;
+    public Item _emptyItem;
+    public Item item;
     public int Id;
 
     [SerializeField]
@@ -62,7 +63,7 @@ public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         if (Count < 1)
         {
-            item = null;
+            item = _emptyItem;
             itemIcon.gameObject.SetActive(false);
             itemCountText.gameObject.SetActive(false);
         }
@@ -123,13 +124,13 @@ public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         //Debug.Log("Pointer Down");
         
         //Create instantiated temp object for dragging and disable raycast Target to raycast other objects with mouse.
-        if (!isPicked)
+        if (!isPicked && TransferManager.Instance._targetSlot.Count > 0)
         {
             isPicked = true;
             itemIcon.raycastTarget = false;
             _dragingObject = Instantiate(itemIcon, 
                 Input.mousePosition, 
-                Quaternion.identity, 
+                Quaternion.identity,
                 GameObject.Find("Canvas").gameObject.transform).gameObject;
             itemIcon.gameObject.SetActive(false);
         }
@@ -155,12 +156,8 @@ public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             {
                 //Debug.Log("Drop");
                 TransferManager.Instance._targetSlot.item = item;
-                TransferManager.Instance._targetSlot.Count = 1;
-                Count += -1;
-                if (Count <= 0)
-                {
-                    item = null;
-                }
+                TransferManager.Instance._targetSlot.Count = Count;
+                Count = 0;
                 OnTransferred?.Invoke(this, EventArgs.Empty);
             }
             

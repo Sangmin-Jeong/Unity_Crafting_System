@@ -76,6 +76,7 @@ public class CraftingSystem : MonoBehaviour
         int coalCount = 0;
         int stickCount = 0;
         int plankCount = 0;
+        int emptyCount = 0;
         
         // Check how many ingredients are on Crafting slots
         foreach (ItemSlot itemSlot in craftingItemSlotsArray)
@@ -98,6 +99,10 @@ public class CraftingSystem : MonoBehaviour
                 {
                     plankCount++;
                 }
+                else if (itemSlot.item.Id == (int)ItemType.EMPTY)
+                {
+                    emptyCount++;
+                }
             }
         }
         
@@ -112,6 +117,7 @@ public class CraftingSystem : MonoBehaviour
         Debug.Log("Coal: "+coalCount);
         Debug.Log("Stick: "+stickCount);
         Debug.Log("Plank: "+plankCount);
+        Debug.Log("Plank: "+emptyCount);
         
         // Creafting Slots
         // 11 12 13 14
@@ -119,74 +125,76 @@ public class CraftingSystem : MonoBehaviour
         // 31 32 33 34
         
         // Plank Recipe
+        // Only need to check Amount of wood on Crafting slots
         if (woodCount == Plank._requiredAmount)
         {
             Debug.Log("Output: Plank");
-            GetItemForOutput(ItemType.PLANK);
+            GetItemForOutput(ItemType.PLANK, 4);
 
         }
         // Stick Recipe
-        else if (woodCount == Stick._requiredAmount)
+        else if (plankCount == Stick._requiredAmount)
         {
-            int slotCounter = 0;
             for (int i = 0; i < row; i++)
             {
                 for (int j = 0; j < column; j++)
                 {
-                    if (craftingItemSlotsArray[i, j].item)
+                    // Check if there is the same permutation like Stick's recipe 
+                    if(i + 1 < row)
+                    if (craftingItemSlotsArray[i, j].item.Id == Stick._recipe[0,0] &&
+                        craftingItemSlotsArray[i + 1, j].item.Id == Stick._recipe[1, 0])
                     {
-                        if (craftingItemSlotsArray[i, j].item.Id == (int)ItemType.WOOD)
-                        {
-                            if (craftingItemSlotsArray[i + 1, j].item)
-                            if (craftingItemSlotsArray[i + 1, j].item.Id == (int)ItemType.WOOD)
-                            {
-                                Debug.Log("Output: Stick");
-                                GetItemForOutput(ItemType.STICK);
-                                return;
-                            }
-                        }
+                        Debug.Log("Output: Stick");
+                        GetItemForOutput(ItemType.STICK, 4);
+                        return;
                     }
                 }
-            
+                
             }
-            // foreach (ItemSlot itemSlot in craftingItemSlotsArray)
-            // {
-            //     if (itemSlot.item)
-            //     {
-            //         if(itemSlot.item.Id == (int)ItemType.WOOD)
-            //         {
-            //             
-            //             // if (GetCraftingSlotWithID(itemSlot.Id + 10).item.Id == (int)ItemType.WOOD)
-            //             // {
-            //             //     Debug.Log("Output: Stick");
-            //             //     GetItemForOutput(ItemType.STICK);
-            //             //     return;
-            //             // }
-            //             // else
-            //             // {
-            //             //     return;
-            //             // }
-            //         }
-            //     }
-            // }
-
+            CleanOutPutSlot();
+        }
+                // Stick Recipe
+        else if (plankCount == Stick._requiredAmount)
+        {
+            for (int i = 0; i < row; i++)
+            {
+                for (int j = 0; j < column; j++)
+                {
+                    // Check if there is the same permutation like Stick's recipe 
+                    if(i + 1 < row)
+                    if (craftingItemSlotsArray[i, j].item.Id == Stick._recipe[0,0] &&
+                        craftingItemSlotsArray[i + 1, j].item.Id == Stick._recipe[1, 0])
+                    {
+                        Debug.Log("Output: Stick");
+                        GetItemForOutput(ItemType.STICK, 4);
+                        return;
+                    }
+                }
+                
+            }
+            CleanOutPutSlot();
         }
         else
         {
-            outputSlot.Count = 0;
+            CleanOutPutSlot();
         }
     }
 
-    private void GetItemForOutput(ItemType itemType)
+    private void GetItemForOutput(ItemType itemType, int amount)
     {
         foreach (Item item in _craftableItems)
         {
             if (item.ItemType == itemType)
             {
                 outputSlot.item = item;
-                outputSlot.Count = 1;
+                outputSlot.Count = amount;
             }
         }
+    }
+
+    void CleanOutPutSlot()
+    {
+        outputSlot.Count = 0;
     }
 
     ItemSlot GetCraftingSlotWithID(int id)
@@ -209,6 +217,6 @@ public class CraftingSystem : MonoBehaviour
             itemSlot.Count = 0;
         }
 
-        outputSlot.Count = 0;
+        CleanOutPutSlot();
     }
 }

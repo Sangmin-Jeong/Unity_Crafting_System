@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class TransferManager : MonoBehaviour
 {
-    public static TransferManager Instance;
+    public static TransferManager Instance { get; private set; }
     public ItemSlot _targetSlot;
 
     private void Start()
