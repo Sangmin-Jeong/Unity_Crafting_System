@@ -32,10 +32,9 @@ public class CraftingSystem : MonoBehaviour
         rect.width = column * 64f + 50f;
         craftingPanel.GetComponent<RectTransform>().sizeDelta = new Vector2(rect.width, rect.height);
         craftingPanel.GetComponent<GridLayoutGroup>().constraintCount = column;
-  
-        craftingItemSlotsArray = new ItemSlot[row, column];
         
         //Create crafting array with desired size
+        craftingItemSlotsArray = new ItemSlot[row, column];
         int slotCounter = 0;
         for (int i = 0; i < row; i++)
         {
@@ -71,7 +70,7 @@ public class CraftingSystem : MonoBehaviour
     
     private void ItemSlot_OnTaken(object sender, EventArgs e)
     {
-        CleanCraftSlots();
+        ConsumeCraftSlots();
     }
 
     private void CheckRecipes()
@@ -266,5 +265,16 @@ public class CraftingSystem : MonoBehaviour
         }
 
         CleanOutPutSlot();
+    }
+    
+    void ConsumeCraftSlots()
+    {
+        foreach (ItemSlot itemSlot in craftingItemSlotsArray)
+        {
+            itemSlot.Count -= 1;
+        }
+
+        CleanOutPutSlot();
+        CheckRecipes();
     }
 }

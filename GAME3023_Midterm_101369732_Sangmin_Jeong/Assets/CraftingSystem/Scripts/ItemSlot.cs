@@ -139,7 +139,7 @@ public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         if (_dragingObject)
         {
             Destroy(_dragingObject);
-            if (Count > 1)
+            if (Count > 0)
             {
                 itemIcon.gameObject.SetActive(true);
             }
@@ -147,26 +147,42 @@ public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             // Drop Item on ItemSlot and transfer item info
             if (TransferManager.Instance._targetSlot)
             {
-                TransferManager.Instance._targetSlot.item = item;
+                if (TransferManager.Instance._targetSlot.gameObject.name == "OutputSlot") return;
                 
                 // To transfer whole amount of item that is on output slot
                 if (eventData.pointerPress.name == "OutputSlot")
                 {
+                    TransferManager.Instance._targetSlot.item = item;
                     TransferManager.Instance._targetSlot.Count += Count;
                     Count = 0;
                     OnTaken?.Invoke(this, EventArgs.Empty);
                     return;
                 }
                 
-                // Check if we dropped the item on the same slot
+                // Check if we dropped the item on the different slot
                 if (TransferManager.Instance._targetSlot != this)
                 {
-                    TransferManager.Instance._targetSlot.Count += 1;
-                    Count += -1;
-                    OnTransferred?.Invoke(this, EventArgs.Empty);
+                    // Check if we dropped the item on the same type of item
+                    if (item.ItemType == TransferManager.Instance._targetSlot.item.ItemType)
+                    {
+                        TransferManager.Instance._targetSlot.item = item;
+                        TransferManager.Instance._targetSlot.Count += Count;
+                        Count = 0;
+                        OnTransferred?.Invoke(this, EventArgs.Empty);
+                    }
+                    // Different Type
+                    else
+                    {
+                        // Swap values
+                        (item, TransferManager.Instance._targetSlot.item) = (TransferManager.Instance._targetSlot.item, item);
+                        (Count, TransferManager.Instance._targetSlot.Count) = (TransferManager.Instance._targetSlot.Count, Count);
+                        OnTransferred?.Invoke(this, EventArgs.Empty);
+                    }
                 }
+                // The same slot
                 else
                 {
+                    TransferManager.Instance._targetSlot.item = item;
                     TransferManager.Instance._targetSlot.Count += Count;
                 }
             }
