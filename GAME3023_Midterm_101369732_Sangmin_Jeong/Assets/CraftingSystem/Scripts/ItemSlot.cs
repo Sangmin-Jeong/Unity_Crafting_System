@@ -121,13 +121,11 @@ public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     
     public void OnPointerDown(PointerEventData eventData)
     {
-        //Debug.Log("Pointer Down");
-        
         //Create instantiated temp object for dragging and disable raycast Target to raycast other objects with mouse.
+        if(TransferManager.Instance._targetSlot)
         if (!isPicked && TransferManager.Instance._targetSlot.Count > 0)
         {
             isPicked = true;
-            itemIcon.raycastTarget = false;
             _dragingObject = Instantiate(itemIcon, 
                 Input.mousePosition, 
                 Quaternion.identity,
@@ -138,8 +136,6 @@ public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     
     public void OnPointerUp(PointerEventData eventData)
     {
-        //Debug.Log("Pointer Up");
-        
         // Destroy temp object and enable raycast of itemIcon back.
         isPicked = false;
         if (_dragingObject)
@@ -148,13 +144,11 @@ public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             if (Count > 1)
             {
                 itemIcon.gameObject.SetActive(true);
-                itemIcon.raycastTarget = true;
             }
             
             // Drop Item on ItemSlot and transfer item info
             if (TransferManager.Instance._targetSlot)
             {
-                //Debug.Log("Drop");
                 TransferManager.Instance._targetSlot.item = item;
                 TransferManager.Instance._targetSlot.Count = Count;
                 Count = 0;

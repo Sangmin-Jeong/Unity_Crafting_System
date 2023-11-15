@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering.UI;
+using UnityEngine.UIElements;
 
 public class CraftingSystem : MonoBehaviour
 {
@@ -72,11 +74,8 @@ public class CraftingSystem : MonoBehaviour
 
     private void CheckRecipes()
     {
-        int woodCount = 0;
-        int coalCount = 0;
-        int stickCount = 0;
-        int plankCount = 0;
-        int emptyCount = 0;
+        int woodCount = 0; int coalCount = 0; int stickCount = 0;
+        int plankCount = 0; int emptyCount = 0;
         
         // Check how many ingredients are on Crafting slots
         foreach (ItemSlot itemSlot in craftingItemSlotsArray)
@@ -113,11 +112,11 @@ public class CraftingSystem : MonoBehaviour
             return;
         }
         
-        Debug.Log("Wood: "+woodCount);
-        Debug.Log("Coal: "+coalCount);
-        Debug.Log("Stick: "+stickCount);
-        Debug.Log("Plank: "+plankCount);
-        Debug.Log("Plank: "+emptyCount);
+        // Debug.Log("Wood: "+woodCount);
+        // Debug.Log("Coal: "+coalCount);
+        // Debug.Log("Stick: "+stickCount);
+        // Debug.Log("Plank: "+plankCount);
+        // Debug.Log("Empty: "+emptyCount);
         
         // Creafting Slots
         // 11 12 13 14
@@ -135,49 +134,90 @@ public class CraftingSystem : MonoBehaviour
         // Stick Recipe
         else if (plankCount == Stick._requiredAmount)
         {
-            for (int i = 0; i < row; i++)
-            {
-                for (int j = 0; j < column; j++)
-                {
-                    // Check if there is the same permutation like Stick's recipe 
-                    if(i + 1 < row)
-                    if (craftingItemSlotsArray[i, j].item.Id == Stick._recipe[0,0] &&
-                        craftingItemSlotsArray[i + 1, j].item.Id == Stick._recipe[1, 0])
-                    {
-                        Debug.Log("Output: Stick");
-                        GetItemForOutput(ItemType.STICK, 4);
-                        return;
-                    }
-                }
-                
-            }
-            CleanOutPutSlot();
+            CheckAndOutput(Stick._recipe, ItemType.STICK, 4);
         }
-                // Stick Recipe
-        else if (plankCount == Stick._requiredAmount)
+        // Wooden_Pickaxe Recipe
+        else if (plankCount == WoodenPickaxe._requiredAmount && stickCount == WoodenPickaxe._requiredAmount2)
         {
-            for (int i = 0; i < row; i++)
-            {
-                for (int j = 0; j < column; j++)
-                {
-                    // Check if there is the same permutation like Stick's recipe 
-                    if(i + 1 < row)
-                    if (craftingItemSlotsArray[i, j].item.Id == Stick._recipe[0,0] &&
-                        craftingItemSlotsArray[i + 1, j].item.Id == Stick._recipe[1, 0])
-                    {
-                        Debug.Log("Output: Stick");
-                        GetItemForOutput(ItemType.STICK, 4);
-                        return;
-                    }
-                }
-                
-            }
-            CleanOutPutSlot();
+            CheckAndOutput(WoodenPickaxe._recipe, ItemType.WOODEN_PICKAXE, 1);
         }
         else
         {
             CleanOutPutSlot();
         }
+    }
+
+    private void CheckAndOutput(int[,] recipe, ItemType itemType, int amount)
+    {
+        int recipeRow = recipe.GetLength(0);
+        int recipeCol = recipe.GetLength(1);
+
+        for (int i = 0; i < row; i++)
+        {
+            for (int j = 0; j < column; j++)
+            {
+                if (i + recipeRow > row || j + recipeCol > column)
+                {
+                    CleanOutPutSlot();
+                    return;
+                }
+                     
+                ItemSlot[,] temp = CreateNewCheckingArray(recipe, i, j);
+                     
+                if (CheckPermutation(temp, recipe, itemType, amount))
+                {
+                    return;
+                }
+            }
+        }
+    }
+
+    private bool CheckPermutation(ItemSlot[,] craftingArray, int[,] recipe, ItemType itemType, int amount)
+    {
+        int craftingRow = craftingArray.GetLength(0);
+        int craftingCol = craftingArray.GetLength(1);
+        
+        for (int i = 0; i < craftingRow; i++)
+        {
+            for (int j = 0; j < craftingCol; j++)
+            {
+                if (craftingArray[i, j].item.Id != recipe[i,j])
+                {
+                    CleanOutPutSlot();
+                    return false;
+                }
+            }
+        }
+        
+        GetItemForOutput(itemType, amount);
+        return true;
+    }
+
+    private ItemSlot[,] CreateNewCheckingArray(int[,] recipe, int x, int y)
+    {
+        int Rrow = recipe.GetLength(0);
+        int Rcolumn = recipe.GetLength(1);
+        ItemSlot[,] newArray = new ItemSlot [Rrow, Rcolumn];
+        
+        int ni = 0;
+        int nj = 0;
+        if (x != -1 && y != -1)
+        {
+            for (int i = x; i < x + Rrow; i++)
+            {
+                nj = 0;
+                for (int j = y; j < y + Rcolumn; j++)
+                {
+                    newArray[ni, nj] = craftingItemSlotsArray[i, j];
+                    nj++;
+                }
+                ni++;
+            }
+
+            return newArray;
+        }
+
+        return null;
     }
 
     private void GetItemForOutput(ItemType itemType, int amount)
