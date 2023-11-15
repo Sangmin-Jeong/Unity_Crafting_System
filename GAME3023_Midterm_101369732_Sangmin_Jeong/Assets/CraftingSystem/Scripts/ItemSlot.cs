@@ -5,6 +5,7 @@ using System.Numerics;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Rendering.UI;
 using UnityEngine.UI;
 using Quaternion = UnityEngine.Quaternion;
 
@@ -13,7 +14,6 @@ public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public Item _emptyItem;
     public Item item;
-    public int Id;
 
     [SerializeField]
     private TMPro.TextMeshProUGUI descriptionText;
@@ -121,21 +121,24 @@ public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     
     public void OnPointerDown(PointerEventData eventData)
     {
-        //Create instantiated temp object for dragging and disable raycast Target to raycast other objects with mouse.
-        if(TransferManager.Instance._targetSlot)
-        if (!isPicked && TransferManager.Instance._targetSlot.Count > 0)
+        //Create instantiated temp object for dragging
+        if (TransferManager.Instance._targetSlot)
         {
-            isPicked = true;
-            _dragingObject = Instantiate(itemIcon, 
-                Input.mousePosition, 
-                Quaternion.identity,
-                GameObject.Find("Canvas").gameObject.transform).gameObject;
-            itemIcon.gameObject.SetActive(false);
+            if (!isPicked && TransferManager.Instance._targetSlot.Count > 0)
+            {
+                isPicked = true;
+                _dragingObject = Instantiate(itemIcon, 
+                    Input.mousePosition, 
+                    Quaternion.identity,
+                    GameObject.Find("Canvas").gameObject.transform).gameObject;
+                itemIcon.gameObject.SetActive(false);
+            }
         }
     }
     
     public void OnPointerUp(PointerEventData eventData)
     {
+        //Debug.Log(eventData.pointerPress.name);
         // Destroy temp object and enable raycast of itemIcon back.
         isPicked = false;
         if (_dragingObject)
@@ -150,11 +153,27 @@ public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             if (TransferManager.Instance._targetSlot)
             {
                 TransferManager.Instance._targetSlot.item = item;
-                TransferManager.Instance._targetSlot.Count = Count;
-                Count = 0;
-                OnTransferred?.Invoke(this, EventArgs.Empty);
+                
+                // To transfer whole amount of item that is on output slot
+                if (eventData.pointerPress.name == "OutputSlot")
+                {
+                    TransferManager.Instance._targetSlot.Count = Count;
+                    Count = 0;
+                    return;
+                }
+                
+                // Check if we dropped the item on the same slot
+                if (TransferManager.Instance._targetSlot != this)
+                {
+                    TransferManager.Instance._targetSlot.Count = 1;
+                    Count += -1;
+                    OnTransferred?.Invoke(this, EventArgs.Empty);
+                }
+                else
+                {
+                    TransferManager.Instance._targetSlot.Count = Count;
+                }
             }
-            
         }
     }
 }

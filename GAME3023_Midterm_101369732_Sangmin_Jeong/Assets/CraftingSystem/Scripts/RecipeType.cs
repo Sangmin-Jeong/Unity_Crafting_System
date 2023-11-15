@@ -15,68 +15,64 @@ public enum RecipeType
 
 public static class Plank
 {
-    private static RecipeType _recipeType = RecipeType.PLANK;
     public static int _requiredAmount = 1;
     public static int _recipe;
 
     static Plank()
     {
-        _recipe = 1;
+        _recipe = (int)ItemType.WOOD;
     }
 }
 
 public static class Stick
 {
-    private static RecipeType _recipeType = RecipeType.STICK;
     public static int _requiredAmount = 2;
     public static int[,] _recipe = new int[2,1];
 
     static Stick()
     {
-        _recipe[0, 0] = 3;
-        _recipe[1, 0] = 3;
+        _recipe[0, 0] = (int)ItemType.PLANK;
+        _recipe[1, 0] = (int)ItemType.PLANK;
     }
 }
 
-// public static class Plank
-// {
-//     private static RecipeType _recipeType = RecipeType.TORCH;
-//     public static int _requiredAmount = 1;
-//     public static int[,] _recipe = new int[3,3];
-//
-//     static Plank()
-//     {
-//         _recipe[0, 0] = 1; _recipe[0, 1] = 1; _recipe[0, 2] = 1;
-//         _recipe[1, 0] = 1; _recipe[1, 1] = 1; _recipe[1, 2] = 1;
-//         _recipe[2, 0] = 1; _recipe[2, 1] = 1; _recipe[2, 2] = 1;
-//     }
-// }
+public static class Torch
+{
+    public static int _requiredAmount = 1;
+    public static int _requiredAmount2 = 1;
+    public static int[,] _recipe = new int[2,1];
+
+    static Torch()
+    {
+        _recipe[0, 0] = (int)ItemType.COAL;
+        _recipe[1, 0] = (int)ItemType.STICK;
+    }
+}
 
 public static class WoodenPickaxe
 {
-    private static RecipeType _recipeType = RecipeType.WOODEN_PICKAXE;
     public static int _requiredAmount = 3;
     public static int _requiredAmount2 = 2;
     public static int[,] _recipe = new int[3,3];
 
     static WoodenPickaxe()
     {
-        _recipe[0, 0] = 3; _recipe[0, 1] = 3; _recipe[0, 2] = 3;
-        _recipe[1, 0] = 0; _recipe[1, 1] = 4; _recipe[1, 2] = 0;
-        _recipe[2, 0] = 0; _recipe[2, 1] = 4; _recipe[2, 2] = 0;
+        _recipe[0, 0] = (int)ItemType.PLANK; _recipe[0, 1] = (int)ItemType.PLANK; _recipe[0, 2] = (int)ItemType.PLANK;
+        _recipe[1, 0] = (int)ItemType.EMPTY; _recipe[1, 1] = (int)ItemType.STICK; _recipe[1, 2] = (int)ItemType.EMPTY;
+        _recipe[2, 0] = (int)ItemType.EMPTY; _recipe[2, 1] = (int)ItemType.STICK; _recipe[2, 2] = (int)ItemType.EMPTY;
     }
 }
 
-// public static class WoodenSword
-// {
-//     private static RecipeType _recipeType = RecipeType.WOODEN_SWORD;
-//     public static int _requiredAmount = 1;
-//     public static int[,] _recipe = new int[3,3];
-//
-//     static Plank()
-//     {
-//         _recipe[0, 0] = 1; _recipe[0, 1] = 1; _recipe[0, 2] = 1;
-//         _recipe[1, 0] = 1; _recipe[1, 1] = 1; _recipe[1, 2] = 1;
-//         _recipe[2, 0] = 1; _recipe[2, 1] = 1; _recipe[2, 2] = 1;
-//     }
-// }
+public static class WoodenSword
+{
+    public static int _requiredAmount = 2;
+    public static int _requiredAmount2 = 1;
+    public static int[,] _recipe = new int[3,1];
+
+    static WoodenSword()
+    {
+        _recipe[0, 0] = (int)ItemType.PLANK;
+        _recipe[1, 0] = (int)ItemType.PLANK;
+        _recipe[2, 0] = (int)ItemType.STICK;
+    }
+}

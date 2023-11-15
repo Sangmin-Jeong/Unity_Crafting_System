@@ -36,7 +36,7 @@ public class CraftingSystem : MonoBehaviour
             inventoryPanel.transform.GetComponentsInChildren<ItemSlot>()
         );
         
-        //Set Slot ID
+        //Create crafting array with desired size
         int slotCounter = 0;
         for (int i = 0; i < row; i++)
         {
@@ -47,18 +47,6 @@ public class CraftingSystem : MonoBehaviour
             }
             
         }
-        // int num = 11;
-        // int slotCounter = 0;
-        //
-        // for (int j = 0; j < row; j++)
-        // {
-        //     for (int k = 0; k < column; k++)
-        //     {
-        //         craftingItemSlots[slotCounter].Id = num + k;
-        //         craftingItemSlots[slotCounter++].OnTransferred += ItemSlot_OnTransferred;
-        //     }
-        //     num += 10;
-        // }
         
         // Subscribe slot's OnTransferred Event
         foreach (ItemSlot iSlot in inventoryItemSlots)
@@ -125,21 +113,32 @@ public class CraftingSystem : MonoBehaviour
         
         // Plank Recipe
         // Only need to check Amount of wood on Crafting slots
-        if (woodCount == Plank._requiredAmount)
+        if (woodCount == Plank._requiredAmount && emptyCount == craftingItemSlots.Count - Plank._requiredAmount)
         {
-            Debug.Log("Output: Plank");
             GetItemForOutput(ItemType.PLANK, 4);
-
         }
         // Stick Recipe
-        else if (plankCount == Stick._requiredAmount)
+        else if (plankCount == Stick._requiredAmount && emptyCount == craftingItemSlots.Count - Stick._requiredAmount)
         {
             CheckAndOutput(Stick._recipe, ItemType.STICK, 4);
         }
+        // Torch Recipe
+        else if (coalCount == Torch._requiredAmount && stickCount == Torch._requiredAmount2 &&
+                 emptyCount == craftingItemSlots.Count - (Torch._requiredAmount + Torch._requiredAmount2))
+        {
+            CheckAndOutput(Torch._recipe, ItemType.TORCH, 4);
+        }
         // Wooden_Pickaxe Recipe
-        else if (plankCount == WoodenPickaxe._requiredAmount && stickCount == WoodenPickaxe._requiredAmount2)
+        else if (plankCount == WoodenPickaxe._requiredAmount && stickCount == WoodenPickaxe._requiredAmount2 &&
+                 emptyCount == craftingItemSlots.Count - (WoodenPickaxe._requiredAmount + WoodenPickaxe._requiredAmount2))
         {
             CheckAndOutput(WoodenPickaxe._recipe, ItemType.WOODEN_PICKAXE, 1);
+        }
+        // Wooden_Sword Recipe
+        else if (plankCount == WoodenSword._requiredAmount && stickCount == WoodenSword._requiredAmount2 &&
+                 emptyCount == craftingItemSlots.Count - (WoodenSword._requiredAmount + WoodenSword._requiredAmount2))
+        {
+            CheckAndOutput(WoodenSword._recipe, ItemType.WOODEN_SWORD, 1);
         }
         else
         {
@@ -156,6 +155,8 @@ public class CraftingSystem : MonoBehaviour
         {
             for (int j = 0; j < column; j++)
             {
+                // No need to check further more if there is no space on the crafting array
+                // to check recipe's array size 
                 if (i + recipeRow > row || j + recipeCol > column)
                 {
                     CleanOutPutSlot();
@@ -163,7 +164,8 @@ public class CraftingSystem : MonoBehaviour
                 }
                      
                 ItemSlot[,] temp = CreateNewCheckingArray(recipe, i, j);
-                     
+                
+                // Exit and Display Output if we has found valid recipe
                 if (CheckPermutation(temp, recipe, itemType, amount))
                 {
                     return;
@@ -174,9 +176,11 @@ public class CraftingSystem : MonoBehaviour
 
     private bool CheckPermutation(ItemSlot[,] craftingArray, int[,] recipe, ItemType itemType, int amount)
     {
+        // craftingArray = new array made with the same size of recipe
         int craftingRow = craftingArray.GetLength(0);
         int craftingCol = craftingArray.GetLength(1);
         
+        // Check the elements in the same position of both array.
         for (int i = 0; i < craftingRow; i++)
         {
             for (int j = 0; j < craftingCol; j++)
@@ -189,12 +193,15 @@ public class CraftingSystem : MonoBehaviour
             }
         }
         
+        // If Above For-statement did not return false, All elements are same with recipe we want to make.
         GetItemForOutput(itemType, amount);
         return true;
     }
 
     private ItemSlot[,] CreateNewCheckingArray(int[,] recipe, int x, int y)
     {
+        // Create new array that corresponding input recipe, the same size of array.
+        // So new array could be 2x2, 3x3 whatever
         int Rrow = recipe.GetLength(0);
         int Rcolumn = recipe.GetLength(1);
         ItemSlot[,] newArray = new ItemSlot [Rrow, Rcolumn];
@@ -235,19 +242,6 @@ public class CraftingSystem : MonoBehaviour
     void CleanOutPutSlot()
     {
         outputSlot.Count = 0;
-    }
-
-    ItemSlot GetCraftingSlotWithID(int id)
-    {
-        foreach (ItemSlot itemSlot in craftingItemSlotsArray)
-        {
-            if (itemSlot.Id == id)
-            {
-                return itemSlot;
-            }
-        }
-
-        return null;
     }
 
     void CleanCraftSlots()
