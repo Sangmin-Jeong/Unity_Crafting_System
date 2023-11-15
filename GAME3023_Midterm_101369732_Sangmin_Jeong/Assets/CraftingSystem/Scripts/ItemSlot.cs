@@ -134,7 +134,6 @@ public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     
     public void OnPointerUp(PointerEventData eventData)
     {
-        //Debug.Log(eventData.pointerPress.name);
         // Destroy temp object and enable raycast of itemIcon back.
         isPicked = false;
         if (_dragingObject)

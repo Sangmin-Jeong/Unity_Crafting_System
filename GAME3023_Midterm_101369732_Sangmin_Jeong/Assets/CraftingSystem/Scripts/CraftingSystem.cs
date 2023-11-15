@@ -6,12 +6,13 @@ using UnityEngine;
 using UnityEngine.Rendering.UI;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
+using Image = UnityEngine.UI.Image;
 
 public class CraftingSystem : MonoBehaviour
 {
-    [SerializeField] private int column;
-    [SerializeField] private int row;
-    private GridLayoutGroup _gridLayout;
+    [SerializeField][Range(1,5)] private int column;
+    [SerializeField][Range(1,5)]  private int row;
+    
     private ItemSlot[,] craftingItemSlotsArray;
     List<ItemSlot> craftingItemSlots = new List<ItemSlot>();
     List<ItemSlot> inventoryItemSlots = new List<ItemSlot>();
@@ -25,9 +26,13 @@ public class CraftingSystem : MonoBehaviour
     {
         outputSlot = GameObject.Find("OutputSlot").GetComponent<ItemSlot>();
         outputSlot.OnTaken += ItemSlot_OnTaken;
-
-        _gridLayout = craftingPanel.GetComponent<GridLayoutGroup>();
-        _gridLayout.constraintCount = column;
+        
+        // Set flexible Crafting Array
+        Rect rect = craftingPanel.GetComponent<RectTransform>().rect;
+        rect.width = column * 64f + 50f;
+        craftingPanel.GetComponent<RectTransform>().sizeDelta = new Vector2(rect.width, rect.height);
+        craftingPanel.GetComponent<GridLayoutGroup>().constraintCount = column;
+  
         craftingItemSlotsArray = new ItemSlot[row, column];
         
         //Create crafting array with desired size
