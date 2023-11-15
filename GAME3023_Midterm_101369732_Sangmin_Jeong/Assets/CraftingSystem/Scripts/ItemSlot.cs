@@ -14,11 +14,11 @@ public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public Item _emptyItem;
     public Item item;
-
-    [SerializeField]
-    private TMPro.TextMeshProUGUI descriptionText;
-    [SerializeField]
-    private TMPro.TextMeshProUGUI nameText;
+    
+    private TextMeshProUGUI descriptionText;
+    private TextMeshProUGUI nameText;
+    Image itemIcon;
+    TextMeshProUGUI itemCountText;
 
     [SerializeField]
     private int count = 0;
@@ -31,12 +31,6 @@ public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             UpdateGraphic();
         }
     }
-
-    [SerializeField]
-    Image itemIcon;
-
-    [SerializeField]
-    TextMeshProUGUI itemCountText;
     
     // Dragging
     private GameObject _dragingObject;
@@ -44,9 +38,11 @@ public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     
     // Event
     public EventHandler OnTransferred;
+    public EventHandler OnTaken;
     
     void Start()
     {
+        Initialize();
         UpdateGraphic();
     }
     private void Update()
@@ -157,23 +153,32 @@ public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                 // To transfer whole amount of item that is on output slot
                 if (eventData.pointerPress.name == "OutputSlot")
                 {
-                    TransferManager.Instance._targetSlot.Count = Count;
+                    TransferManager.Instance._targetSlot.Count += Count;
                     Count = 0;
+                    OnTaken?.Invoke(this, EventArgs.Empty);
                     return;
                 }
                 
                 // Check if we dropped the item on the same slot
                 if (TransferManager.Instance._targetSlot != this)
                 {
-                    TransferManager.Instance._targetSlot.Count = 1;
+                    TransferManager.Instance._targetSlot.Count += 1;
                     Count += -1;
                     OnTransferred?.Invoke(this, EventArgs.Empty);
                 }
                 else
                 {
-                    TransferManager.Instance._targetSlot.Count = Count;
+                    TransferManager.Instance._targetSlot.Count += Count;
                 }
             }
         }
+    }
+
+    void Initialize()
+    {
+        descriptionText = GameObject.Find("Item Description").GetComponent<TextMeshProUGUI>();
+        nameText = GameObject.Find("Item Name").GetComponent<TextMeshProUGUI>();
+        itemIcon = transform.Find("Icon").GetComponent<Image>();
+        itemCountText = transform.Find("Icon").transform.Find("Count").GetComponent<TextMeshProUGUI>();
     }
 }

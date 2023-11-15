@@ -4,37 +4,31 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering.UI;
+using UnityEngine.UI;
 using UnityEngine.UIElements;
 
 public class CraftingSystem : MonoBehaviour
 {
     [SerializeField] private int column;
     [SerializeField] private int row;
+    private GridLayoutGroup _gridLayout;
     private ItemSlot[,] craftingItemSlotsArray;
     List<ItemSlot> craftingItemSlots = new List<ItemSlot>();
     List<ItemSlot> inventoryItemSlots = new List<ItemSlot>();
     private ItemSlot outputSlot;
     [SerializeField] private GameObject inventoryPanel;
-    [SerializeField] GameObject craftingPanel;
-
+    [SerializeField] private GameObject craftingPanel;
+    [SerializeField] private GameObject _itemSlotPrefab;
     [SerializeField] private Item[] _craftableItems;
     
     void Start()
     {
         outputSlot = GameObject.Find("OutputSlot").GetComponent<ItemSlot>();
+        outputSlot.OnTaken += ItemSlot_OnTaken;
 
-        //Read all craftingItemSlots as children of inventory panel
-        craftingItemSlots = new List<ItemSlot>(
-            craftingPanel.transform.GetComponentsInChildren<ItemSlot>()
-        );
-        craftingItemSlots.Remove(outputSlot);
-
+        _gridLayout = craftingPanel.GetComponent<GridLayoutGroup>();
+        _gridLayout.constraintCount = column;
         craftingItemSlotsArray = new ItemSlot[row, column];
-        
-        //Read all inventoryPanel as children of inventory panel
-        inventoryItemSlots = new List<ItemSlot>(
-            inventoryPanel.transform.GetComponentsInChildren<ItemSlot>()
-        );
         
         //Create crafting array with desired size
         int slotCounter = 0;
@@ -42,11 +36,21 @@ public class CraftingSystem : MonoBehaviour
         {
             for (int j = 0; j < column; j++)
             {
+                craftingItemSlots.Add(Instantiate(
+                    _itemSlotPrefab, 
+                    Vector3.zero, 
+                    Quaternion.identity, 
+                    craftingPanel.transform).GetComponent<ItemSlot>());
                 craftingItemSlots[slotCounter].OnTransferred += ItemSlot_OnTransferred;
                 craftingItemSlotsArray[i, j] = craftingItemSlots[slotCounter++];
             }
-            
         }
+        
+        //Read all inventoryPanel as children of inventory panel
+        inventoryItemSlots = new List<ItemSlot>(
+            inventoryPanel.transform.GetComponentsInChildren<ItemSlot>()
+        );
+        
         
         // Subscribe slot's OnTransferred Event
         foreach (ItemSlot iSlot in inventoryItemSlots)
@@ -54,10 +58,15 @@ public class CraftingSystem : MonoBehaviour
             iSlot.OnTransferred += ItemSlot_OnTransferred;
         }
     }
-
+    
     private void ItemSlot_OnTransferred(object sender, EventArgs e)
     {
         CheckRecipes();
+    }
+    
+    private void ItemSlot_OnTaken(object sender, EventArgs e)
+    {
+        CleanCraftSlots();
     }
 
     private void CheckRecipes()
@@ -155,12 +164,12 @@ public class CraftingSystem : MonoBehaviour
         {
             for (int j = 0; j < column; j++)
             {
-                // No need to check further more if there is no space on the crafting array
+                // No need to check this condition if there is no space on the crafting array
                 // to check recipe's array size 
                 if (i + recipeRow > row || j + recipeCol > column)
                 {
                     CleanOutPutSlot();
-                    return;
+                    continue;
                 }
                      
                 ItemSlot[,] temp = CreateNewCheckingArray(recipe, i, j);
