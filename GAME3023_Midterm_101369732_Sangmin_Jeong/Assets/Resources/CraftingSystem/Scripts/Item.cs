@@ -13,6 +13,11 @@ public class Item : ScriptableObject //Extending SO allows us to have an object 
     public string description = "";
     public bool isConsumable = false;
 
+    public Item()
+    {
+        Id = (int)ItemType;
+    }
+
     public void Use()
     {
         Debug.Log("This is the Use() function of item: " + name + " - " + description);

@@ -61,6 +61,9 @@ public class CraftingSystem : MonoBehaviour
         {
             iSlot.OnTransferred += ItemSlot_OnTransferred;
         }
+        
+        // Load all Craftable Item scriptable objects
+        _craftableItems = Resources.LoadAll<Item>("CraftingSystem/Items/Craftable_Ingredients");
     }
     
     private void ItemSlot_OnTransferred(object sender, EventArgs e)
@@ -113,17 +116,6 @@ public class CraftingSystem : MonoBehaviour
             return;
         }
         
-        // Debug.Log("Wood: "+woodCount);
-        // Debug.Log("Coal: "+coalCount);
-        // Debug.Log("Stick: "+stickCount);
-        // Debug.Log("Plank: "+plankCount);
-        // Debug.Log("Empty: "+emptyCount);
-        
-        // Creafting Slots
-        // 11 12 13 14
-        // 21 22 23 24
-        // 31 32 33 34
-        
         // Plank Recipe
         // Only need to check Amount of wood on Crafting slots
         if (woodCount == Plank._requiredAmount && emptyCount == craftingItemSlots.Count - Plank._requiredAmount)
@@ -152,6 +144,24 @@ public class CraftingSystem : MonoBehaviour
                  emptyCount == craftingItemSlots.Count - (WoodenSword._requiredAmount + WoodenSword._requiredAmount2))
         {
             CheckAndOutput(WoodenSword._recipe, ItemType.WOODEN_SWORD, 1);
+        }
+        // Wooden_Medal Recipe
+        else if (stickCount == WoodenMedal._requiredAmount && plankCount == WoodenMedal._requiredAmount2 &&
+                 emptyCount == craftingItemSlots.Count - (WoodenMedal._requiredAmount + WoodenMedal._requiredAmount2))
+        {
+            CheckAndOutput(WoodenMedal._recipe, ItemType.WOODEN_MEDAL, 1);
+        }
+        // Wooden_Helm Recipe
+        else if (plankCount == WoodenHelm._requiredAmount &&
+                 emptyCount == craftingItemSlots.Count - WoodenHelm._requiredAmount)
+        {
+            CheckAndOutput(WoodenHelm._recipe, ItemType.WOODEN_HELM, 1);
+        }
+        // Wooden_Key Recipe
+        else if (stickCount == WoodenKey._requiredAmount && 
+                 emptyCount == craftingItemSlots.Count - WoodenKey._requiredAmount)
+        {
+            CheckAndOutput(WoodenKey._recipe, ItemType.WOODEN_KEY, 1);
         }
         else
         {

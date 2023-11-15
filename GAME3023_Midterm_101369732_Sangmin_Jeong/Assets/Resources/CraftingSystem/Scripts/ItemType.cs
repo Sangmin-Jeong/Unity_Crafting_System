@@ -12,6 +12,9 @@ public enum ItemType
     TORCH,
     WOODEN_PICKAXE,
     WOODEN_SWORD,
+    WOODEN_MEDAL,
+    WOODEN_HELM,
+    WOODEN_KEY,
     //COUNT,
     
 }

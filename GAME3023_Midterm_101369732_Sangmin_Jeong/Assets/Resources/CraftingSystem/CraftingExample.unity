@@ -254,6 +254,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 646392559961933747, guid: 50147ce332354bc45a153732d66a7273, type: 3}
+      propertyPath: item
+      value: 
+      objectReference: {fileID: 11400000, guid: f2fcedea16104a444a1b572ef9e6654b, type: 2}
     - target: {fileID: 1166794312428832082, guid: 50147ce332354bc45a153732d66a7273, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -458,6 +462,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4198502620452679979, guid: 50147ce332354bc45a153732d66a7273, type: 3}
+      propertyPath: item
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 4198502620452679979, guid: 50147ce332354bc45a153732d66a7273, type: 3}
+      propertyPath: count
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4219882440579797390, guid: 50147ce332354bc45a153732d66a7273, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -552,6 +564,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7401907659394526681, guid: 50147ce332354bc45a153732d66a7273, type: 3}
       propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7502225143369177679, guid: 50147ce332354bc45a153732d66a7273, type: 3}
+      propertyPath: item
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 7502225143369177679, guid: 50147ce332354bc45a153732d66a7273, type: 3}
+      propertyPath: count
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 9114377358597297458, guid: 50147ce332354bc45a153732d66a7273, type: 3}
@@ -1063,6 +1083,10 @@ PrefabInstance:
       propertyPath: inventoryPanel
       value: 
       objectReference: {fileID: 2068507902}
+    - target: {fileID: 540513930469666130, guid: b89cffc577950a341b0ed9ce65c95287, type: 3}
+      propertyPath: _craftableItems.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1576950819893177764, guid: b89cffc577950a341b0ed9ce65c95287, type: 3}
       propertyPath: m_Name
       value: CraftingWindow

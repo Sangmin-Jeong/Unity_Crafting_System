@@ -10,6 +10,9 @@ public enum RecipeType
     TORCH,
     WOODEN_PICKAXE,
     WOODEN_SWORD,
+    WOODEN_MEDAL,
+    WOODEN_HELM,
+    WOODEN_KEY,
     COUNT,
 }
 
@@ -74,5 +77,45 @@ public static class WoodenSword
         _recipe[0, 0] = (int)ItemType.PLANK;
         _recipe[1, 0] = (int)ItemType.PLANK;
         _recipe[2, 0] = (int)ItemType.STICK;
+    }
+}
+
+public static class WoodenMedal
+{
+    public static int _requiredAmount = 2;
+    public static int _requiredAmount2 = 1;
+    public static int[,] _recipe = new int[3,1];
+
+    static WoodenMedal()
+    {
+        _recipe[0, 0] = (int)ItemType.STICK;
+        _recipe[1, 0] = (int)ItemType.STICK;
+        _recipe[2, 0] = (int)ItemType.PLANK;
+    }
+}
+
+public static class WoodenHelm
+{
+    public static int _requiredAmount = 7;
+    public static int[,] _recipe = new int[3,3];
+
+    static WoodenHelm()
+    {
+        _recipe[0, 0] = (int)ItemType.PLANK; _recipe[0, 1] = (int)ItemType.PLANK; _recipe[0, 2] = (int)ItemType.PLANK;
+        _recipe[1, 0] = (int)ItemType.PLANK; _recipe[1, 1] = (int)ItemType.EMPTY; _recipe[1, 2] = (int)ItemType.PLANK;
+        _recipe[2, 0] = (int)ItemType.PLANK; _recipe[2, 1] = (int)ItemType.EMPTY; _recipe[2, 2] = (int)ItemType.PLANK;
+    }
+}
+
+public static class WoodenKey
+{
+    public static int _requiredAmount = 4;
+    public static int[,] _recipe = new int[2,2];
+
+    static WoodenKey()
+    {
+        _recipe[0, 0] = (int)ItemType.STICK; _recipe[0, 1] = (int)ItemType.STICK;
+        _recipe[1, 0] = (int)ItemType.STICK; _recipe[1, 1] = (int)ItemType.STICK;
+        
     }
 }
