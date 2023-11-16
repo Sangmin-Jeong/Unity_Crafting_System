@@ -15,5 +15,5 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 67afbb4448a739f4b8b7c4201ee39fe7, type: 3}
   ItemType: 6
   Id: 6
-  description: So fresh it still twiches
+  description: Description
   isConsumable: 1

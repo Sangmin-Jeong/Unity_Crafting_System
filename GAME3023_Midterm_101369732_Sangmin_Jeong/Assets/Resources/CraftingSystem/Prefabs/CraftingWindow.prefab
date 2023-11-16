@@ -224,17 +224,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 450d1f2e5e8c4fe469ac021704e73267, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  column: 3
-  row: 3
+  column: 5
+  row: 5
   inventoryPanel: {fileID: 0}
   craftingPanel: {fileID: 4377811136666897880}
   _itemSlotPrefab: {fileID: 1098820302721575806, guid: 80fe0d3f727f69b428a6da25d5b7f260, type: 3}
-  _craftableItems:
-  - {fileID: 11400000, guid: 8af5a64a9202a5a48b00c1a4993e2917, type: 2}
-  - {fileID: 11400000, guid: c3d50aa4573e7914496c13ff4b27ca76, type: 2}
-  - {fileID: 11400000, guid: 8edf88457d073c0468283afc8209338a, type: 2}
-  - {fileID: 11400000, guid: e60bc6e2dc06bd64499d18c51e69720e, type: 2}
-  - {fileID: 11400000, guid: fa0fc4773150f9948a8a0b25ae0b0744, type: 2}
+  _craftableItems: []
 --- !u!1 &4377811136666897880
 GameObject:
   m_ObjectHideFlags: 0
@@ -268,11 +263,11 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 2522229356649583997}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 110, y: -38.4}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: -16, y: -217}
   m_SizeDelta: {x: 300, y: 400}
-  m_Pivot: {x: 0.5, y: 1}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &59680561345586088
 CanvasRenderer:
   m_ObjectHideFlags: 0

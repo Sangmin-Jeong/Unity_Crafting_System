@@ -8,6 +8,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.Rendering.UI;
 using UnityEngine.UI;
 using Quaternion = UnityEngine.Quaternion;
+using Vector2 = UnityEngine.Vector2;
 
 //Holds reference and count of items, manages their visibility in the Inventory panel
 public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,IPointerDownHandler,IPointerUpHandler
@@ -183,7 +184,7 @@ public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                 else
                 {
                     TransferManager.Instance._targetSlot.item = item;
-                    TransferManager.Instance._targetSlot.Count += Count;
+                    TransferManager.Instance._targetSlot.Count = Count;
                 }
             }
         }

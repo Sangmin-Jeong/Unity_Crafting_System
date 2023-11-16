@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
 public enum ItemType
 {
     EMPTY,
@@ -15,6 +17,6 @@ public enum ItemType
     WOODEN_MEDAL,
     WOODEN_HELM,
     WOODEN_KEY,
-    //COUNT,
+    COUNT,
     
 }

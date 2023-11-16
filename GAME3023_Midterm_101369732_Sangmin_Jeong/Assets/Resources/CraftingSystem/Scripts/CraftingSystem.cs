@@ -10,10 +10,10 @@ using Image = UnityEngine.UI.Image;
 
 public class CraftingSystem : MonoBehaviour
 {
-    [SerializeField][Range(1,5)] private int column;
-    [SerializeField][Range(1,5)]  private int row;
+    [SerializeField][Range(1,5)] public int column;
+    [SerializeField][Range(1,5)] public int row;
     
-    private ItemSlot[,] craftingItemSlotsArray;
+    public ItemSlot[,] craftingItemSlotsArray;
     List<ItemSlot> craftingItemSlots = new List<ItemSlot>();
     List<ItemSlot> inventoryItemSlots = new List<ItemSlot>();
     private ItemSlot outputSlot;
@@ -110,7 +110,7 @@ public class CraftingSystem : MonoBehaviour
         }
         
         // Crafting slots are empty, no need to check further more
-        if (woodCount == 0 && coalCount == 0 && stickCount == 0 && plankCount == 0)
+        if (emptyCount == craftingItemSlots.Count)
         {
             CleanCraftSlots();
             return;

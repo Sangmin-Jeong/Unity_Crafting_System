@@ -15,5 +15,5 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: f35e9bf800df0af4c918e69c8156a38c, type: 3}
   ItemType: 3
   Id: 3
-  description: Produces a lovely aroma when roasted
+  description: Description
   isConsumable: 1

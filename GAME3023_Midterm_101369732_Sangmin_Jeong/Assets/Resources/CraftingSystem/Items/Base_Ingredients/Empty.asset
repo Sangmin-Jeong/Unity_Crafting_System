@@ -15,5 +15,5 @@ MonoBehaviour:
   icon: {fileID: 0}
   ItemType: 0
   Id: 0
-  description: A legendary substance which gives life
+  description: 
   isConsumable: 1

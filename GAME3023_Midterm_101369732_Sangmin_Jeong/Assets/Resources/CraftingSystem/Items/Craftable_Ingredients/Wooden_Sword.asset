@@ -15,5 +15,5 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: 18c3ab46f43920b4687b8c2e17e29e01, type: 3}
   ItemType: 7
   Id: 7
-  description: A fundamental element in alchemy, and in fried chicken
+  description: Description
   isConsumable: 1
