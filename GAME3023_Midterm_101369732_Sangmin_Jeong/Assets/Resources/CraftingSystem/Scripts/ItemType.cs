@@ -18,5 +18,4 @@ public enum ItemType
     WOODEN_HELM,
     WOODEN_KEY,
     COUNT,
-    
 }

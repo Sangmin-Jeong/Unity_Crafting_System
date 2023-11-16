@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
 // [Serializable]
@@ -101,18 +102,45 @@ public static class WoodenKey
         {(int)ItemType.STICK, (int)ItemType.STICK}
     };
 }
-
-
-public static class Test
+public static class LoadRecipe
 {
-    // Add your new class members here
-    public static int[,] _recipe = new int[2,2];
-    public static int[,] GetRecipe() {return _recipe;}
+    public static void LoadRecipeFromTxt(string recipeName, int[,] recipe)
+    {
+        if (File.Exists("Assets/Resources/CraftingSystem/Recipes/" + recipeName  + ".txt"))
+        {
+            StreamReader sr = new StreamReader("Assets/Resources/CraftingSystem/Recipes/" + recipeName  + ".txt");
+
+            int row = 0;
+            int column = 0;
+            while (!sr.EndOfStream)
+            {
+                string line = sr.ReadLine();
+                row++;
+                string[] lines = line.Split(',');
+                column = lines.Length;
+            }
+            
+            sr.BaseStream.Seek(0, SeekOrigin.Begin);
+            for (int i = 0; i < row; i++)
+            {
+                string line = sr.ReadLine();
+                string[] lines = line.Split(',');
+                for (int j = 0; j < column; j++)
+                {
+                    int parsedInt;
+                    if (int.TryParse(lines[j], out parsedInt))
+                    {
+                        recipe[i, j] = parsedInt;
+                        Debug.Log(recipe[i, j]);
+                    }
+                }
+            }
+            sr.Close();
+        }
+        else
+        {
+            Debug.Log("No Recipe");
+        }
+    }
 }
 
-public static class Test1
-{
-    // Add your new class members here
-    public static int[,] _recipe = new int[2,2];
-    public static int[,] GetRecipe() {return _recipe;}
-}

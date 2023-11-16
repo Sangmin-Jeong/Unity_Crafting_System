@@ -55,13 +55,14 @@ public class CraftingEditor : Editor
         {
             if (recipeGrid.GetLength(0) > 0 && recipeGrid.GetLength(1) > 0)
             {
+                DisplayRecipeTable(recipeGrid);
+                
                 if (GUILayout.Button("Create New Recipe"))
                 {
                     AddNewRecipe();
                     SetNewRecipe();
+                    AddNewItem();
                 }
-                
-                DisplayRecipeTable(recipeGrid);
             }
         }
         
@@ -71,28 +72,17 @@ public class CraftingEditor : Editor
 
     void SetNewRecipe()
     {
-        Type type = Type.GetType(recipeName);
-
-        if (type != null && type.IsClass && type.IsSealed && type.IsAbstract)
+        StreamWriter sw = new StreamWriter("Assets/Resources/CraftingSystem/Recipes/" + recipeName  + ".txt");
+        
+        for (int i = 0; i < row; i++)
         {
-            Console.WriteLine($"Accessing static class: {recipeName}");
-            
-            FieldInfo fieldInfo = type.GetField("_recipe", BindingFlags.Public | BindingFlags.Static);
-
-            if (fieldInfo != null)
+            for (int j = 0; j < column; j++)
             {
-                fieldInfo.SetValue(null, recipeGrid);
+                sw.Write(recipeGrid[i,j] + ",");
             }
-            else
-            {
-                Console.WriteLine($"Method 'PrintMessage' not found in class {recipeName}.");
-            }
+            sw.Write("\n");
         }
-        else
-        {
-            Console.WriteLine($"Type {recipeName} is not a valid static class.");
-        }
-
+        sw.Close();
     }
     
     void AddNewRecipe()
@@ -117,8 +107,14 @@ public class CraftingEditor : Editor
         string newClassContent = $@"
 public static class {recipeName}
 {{
-    // Add your new class members here
+    public static string _recipeName;
     public static int[,] _recipe = new int[{row},{column}];
+
+    static {recipeName}()
+    {{
+        _recipeName = ""{recipeName}"";
+        LoadRecipe.LoadRecipeFromTxt(_recipeName, _recipe);
+    }}
 }}
 ";
         
@@ -126,6 +122,35 @@ public static class {recipeName}
         File.WriteAllText(scriptPath, scriptContent);
         AssetDatabase.Refresh();
         Debug.Log($"Class '{recipeName}' added to the script at: {scriptPath}");
+    }
+
+    void AddNewItem()
+    {
+        string scriptPath = "Assets/Resources/CraftingSystem/Scripts/ItemType.cs";
+
+        if (string.IsNullOrEmpty(scriptPath))
+        {
+            Debug.LogError("Script path is invalid or not selected.");
+            return;
+        }
+
+        string scriptContent = File.ReadAllText(scriptPath);
+        
+        if (scriptContent.Contains($"{recipeName.ToUpper()}"))
+        {
+            Debug.LogWarning($"{recipeName.ToUpper()} already exists in the script.");
+            return;
+        }
+
+        string replacedContent = scriptContent.Replace(@"COUNT,
+}", $@"{recipeName.ToUpper()},
+COUNT,
+}}");
+        
+        scriptContent = replacedContent;
+        File.WriteAllText(scriptPath, scriptContent);
+        AssetDatabase.Refresh();
+        Debug.Log($"ItemType '{recipeName}' added to the enum at: {scriptPath}");
     }
     
     void CreateRecipeTable(string recipeName, int row, int column)

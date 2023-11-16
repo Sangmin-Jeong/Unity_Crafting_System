@@ -163,6 +163,10 @@ public class CraftingSystem : MonoBehaviour
         {
             CheckAndOutput(WoodenKey._recipe, ItemType.WOODEN_KEY, 1);
         }
+        // else if (plankCount == 6)
+        // {
+        //     CheckAndOutput(Test2._recipe, ItemType.WOODEN_PICKAXE, 1);
+        // }
         else
         {
             CleanOutPutSlot();
