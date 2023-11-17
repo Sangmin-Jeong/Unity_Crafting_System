@@ -282,6 +282,10 @@ public class CraftingSystem : MonoBehaviour
         }
         
         // New Checker Line
+        if (CheckArraysAreSame(slotItemArray, HeartNecklaces._requiredAmounts))
+        {
+            CheckAndOutput(HeartNecklaces._recipe, HeartNecklaces._itemType, 99);
+        }
         //-
         
          

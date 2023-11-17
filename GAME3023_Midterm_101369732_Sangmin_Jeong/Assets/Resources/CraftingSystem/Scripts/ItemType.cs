@@ -17,5 +17,6 @@ public enum ItemType
     WOODENMEDAL,
     WOODENHELM,
     WOODENKEY,
+    HEARTNECKLACES,
     COUNT,
 }

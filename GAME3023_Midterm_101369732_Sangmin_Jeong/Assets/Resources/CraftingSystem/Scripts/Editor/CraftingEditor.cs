@@ -5,28 +5,49 @@ using System.IO;
 using UnityEngine;
 using UnityEditor;
 using System.Reflection;
+using Unity.VisualScripting;
 
 [CustomEditor(typeof(CraftingManager))]
 public class CraftingEditor : Editor
 {
+    private CraftingManager craftingManager;
     private bool isDisplayed = false;
     private string recipeName;
     private string rowS;
     private string columnS;
     private int row;
     private int column;
-    private int amount = 1;
+    private int amount;
+    private string amountS;
 
     private int[,] recipeGrid = new int[,]{};
+
+    private void OnEnable()
+    {
+        craftingManager = (CraftingManager)target;
+        isDisplayed = false;
+    }
+
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();
 
-        // Draw the default inspector
-        //DrawDefaultInspector();
-
-        CraftingManager craftingManager = (CraftingManager)target;
-
+        // Get a property from custom Editor script, the variable need to be [serializeField]
+        SerializedProperty iconProperty = serializedObject.FindProperty("icon");
+        
+        if (GUILayout.Button("Select Sprite"))
+        {
+            // Open Select Sprite window
+            EditorGUIUtility.ShowObjectPicker<Sprite>(null, false, "", (int)iconProperty.propertyType);
+        }
+        
+        // Check if the select window has been closed
+        if (Event.current.commandName == "ObjectSelectorClosed" && EditorGUIUtility.GetObjectPickerObject() != null)
+        {
+            // Update the serialized property with the selected sprite
+            iconProperty.objectReferenceValue = EditorGUIUtility.GetObjectPickerObject();
+            serializedObject.ApplyModifiedProperties();
+        }
 
         EditorGUILayout.LabelField("RecipeName", EditorStyles.boldLabel);
         recipeName = EditorGUILayout.TextField("",recipeName, EditorStyles.textField);
@@ -40,7 +61,6 @@ public class CraftingEditor : Editor
         
         if (GUILayout.Button("Create New Recipe Table"))
         {
-        
             if (int.TryParse(rowS, out row))
             if (int.TryParse(columnS, out column))
                 
@@ -57,6 +77,9 @@ public class CraftingEditor : Editor
             if (recipeGrid.GetLength(0) > 0 && recipeGrid.GetLength(1) > 0)
             {
                 DisplayRecipeTable(recipeGrid);
+                EditorGUILayout.LabelField("Amount of Output", EditorStyles.boldLabel);
+                amountS = EditorGUILayout.TextField("", amountS, EditorStyles.numberField);
+                if (int.TryParse(amountS, out amount))
                 
                 if (GUILayout.Button("Create New Recipe"))
                 {
@@ -64,6 +87,9 @@ public class CraftingEditor : Editor
                     SetNewRecipe();
                     AddNewItem();
                     AddNewRecipeChecker();
+                    CreateNewItemSO();
+
+                    isDisplayed = false;
                 }
             }
         }
@@ -226,5 +252,26 @@ public static class {recipeName}
             GUILayout.EndHorizontal();
         }
         GUILayout.Space(10);
+    }
+    
+    void CreateNewItemSO()
+    {
+        // Create an instance of the Item scriptable object
+        Item newItem = ScriptableObject.CreateInstance<Item>();
+        
+        // Set values for the new item
+        newItem.icon = craftingManager.icon;
+        newItem.ItemType = (ItemType)((int)ItemType.COUNT);
+        newItem.Id = (int)ItemType.COUNT;
+        newItem.description = "Description";
+        newItem.isConsumable = false;
+
+        // Save Scriptable object into desired folder
+        string assetPath = $"Assets/Resources/CraftingSystem/Items/Craftable_Ingredients/{recipeName}.asset";
+        AssetDatabase.CreateAsset(newItem, assetPath);
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+
+        Debug.Log("New item created and saved");
     }
 }

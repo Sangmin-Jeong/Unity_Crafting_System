@@ -5,6 +5,7 @@ using UnityEngine.UIElements;
 
 public class CraftingManager : MonoBehaviour
 {
+    [SerializeField] public Sprite icon;
     [HideInInspector]public CraftingSystem _craftingSystem;
     [HideInInspector]public Inventory _inventory;
     

@@ -6,7 +6,7 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "New Item", menuName = "Items/New Item")]
 public class Item : ScriptableObject //Extending SO allows us to have an object which exists in the project, not in the scene
 {
-    public Sprite icon;
+    [SerializeField] public Sprite icon;
     public ItemType ItemType;
     public int Id;
     [TextArea]

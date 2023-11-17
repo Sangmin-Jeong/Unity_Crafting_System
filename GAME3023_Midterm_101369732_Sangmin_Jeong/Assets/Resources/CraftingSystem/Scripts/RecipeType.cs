@@ -204,3 +204,18 @@ public static class LoadRecipe
 
 // New Recipe class Line
 //-
+public static class HeartNecklaces
+{
+    public static string _recipeName;
+    public static ItemType _itemType;
+    public static int[] _requiredAmounts = new int[(int)ItemType.COUNT];
+    public static int[,] _recipe = new int[3,3];
+
+    static HeartNecklaces()
+    {
+        _recipeName = "HeartNecklaces";
+        _itemType = ItemType.HEARTNECKLACES;
+        LoadRecipe.LoadRecipeFromTxt(_recipeName, _recipe);
+        LoadRecipe.SetRequiredAmount(_recipe, _requiredAmounts);
+    }
+}
