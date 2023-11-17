@@ -150,16 +150,6 @@ public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             {
                 if (TransferManager.Instance._targetSlot.gameObject.name == "OutputSlot") return;
                 
-                // To transfer whole amount of item that is on output slot
-                if (eventData.pointerPress.name == "OutputSlot")
-                {
-                    TransferManager.Instance._targetSlot.item = item;
-                    TransferManager.Instance._targetSlot.Count += Count;
-                    Count = 0;
-                    OnTaken?.Invoke(this, EventArgs.Empty);
-                    return;
-                }
-                
                 // Check if we dropped the item on the different slot
                 if (TransferManager.Instance._targetSlot != this)
                 {
@@ -169,14 +159,19 @@ public class ItemSlot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
                         TransferManager.Instance._targetSlot.item = item;
                         TransferManager.Instance._targetSlot.Count += Count;
                         Count = 0;
+                        if (eventData.pointerPress.name == "OutputSlot") OnTaken?.Invoke(this, EventArgs.Empty);
                         OnTransferred?.Invoke(this, EventArgs.Empty);
                     }
                     // Different Type
                     else
                     {
+                        if (eventData.pointerPress.name == "OutputSlot" && 
+                            TransferManager.Instance._targetSlot.item.ItemType != ItemType.EMPTY) return;
+                        
                         // Swap values
                         (item, TransferManager.Instance._targetSlot.item) = (TransferManager.Instance._targetSlot.item, item);
                         (Count, TransferManager.Instance._targetSlot.Count) = (TransferManager.Instance._targetSlot.Count, Count);
+                        OnTaken?.Invoke(this, EventArgs.Empty);
                         OnTransferred?.Invoke(this, EventArgs.Empty);
                     }
                 }

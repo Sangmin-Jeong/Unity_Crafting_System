@@ -108,11 +108,13 @@ public class CraftingEditor : Editor
 public static class {recipeName}
 {{
     public static string _recipeName;
+    public static ItemType _itemType;
     public static int[,] _recipe = new int[{row},{column}];
 
     static {recipeName}()
     {{
         _recipeName = ""{recipeName}"";
+        _itemType = ItemType.{recipeName.ToUpper()}
         LoadRecipe.LoadRecipeFromTxt(_recipeName, _recipe);
     }}
 }}

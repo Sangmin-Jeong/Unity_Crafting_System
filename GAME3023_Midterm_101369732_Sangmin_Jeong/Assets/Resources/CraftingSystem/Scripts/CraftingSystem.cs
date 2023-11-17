@@ -21,7 +21,8 @@ public class CraftingSystem : MonoBehaviour
     [SerializeField] private GameObject craftingPanel;
     [SerializeField] private GameObject _itemSlotPrefab;
     [SerializeField] private Item[] _craftableItems;
-    
+
+    private bool isValidRecipe = false;
     void Start()
     {
         outputSlot = GameObject.Find("OutputSlot").GetComponent<ItemSlot>();
@@ -77,100 +78,94 @@ public class CraftingSystem : MonoBehaviour
     }
 
     private void CheckRecipes()
-    {
-        int woodCount = 0; int coalCount = 0; int stickCount = 0;
-        int plankCount = 0; int emptyCount = 0;
-        
-        // Check how many ingredients are on Crafting slots
+    {   
+        // Create an array to check what ingredient we have and how many.
+        int[] slotItemArray = new int[(int)ItemType.COUNT];
+
         foreach (ItemSlot itemSlot in craftingItemSlotsArray)
         {
-            if (itemSlot.item)
-            {
-                if(itemSlot.item.Id == (int)ItemType.WOOD)
-                {
-                    woodCount++;
-                }
-                else if (itemSlot.item.Id == (int)ItemType.COAL)
-                {
-                    coalCount++;
-                }
-                else if (itemSlot.item.Id == (int)ItemType.STICK)
-                {
-                    stickCount++;
-                }
-                else if (itemSlot.item.Id == (int)ItemType.PLANK)
-                {
-                    plankCount++;
-                }
-                else if (itemSlot.item.Id == (int)ItemType.EMPTY)
-                {
-                    emptyCount++;
-                }
-            }
+            slotItemArray[(int)itemSlot.item.ItemType]++;
         }
         
-        // Crafting slots are empty, no need to check further more
-        if (emptyCount == craftingItemSlots.Count)
+        isValidRecipe = false;
+        
+        // Check if we have enough ingredients for each recipe
+        if (CheckArraysAreSame(slotItemArray, Plank._requiredAmounts))
         {
-            CleanCraftSlots();
-            return;
+            // Check if the ingredients are located correctly compare to recipe
+            CheckAndOutput(Plank._recipe, Plank._itemType, 4);
         }
         
-        // Plank Recipe
-        // Only need to check Amount of wood on Crafting slots
-        if (woodCount == Plank._requiredAmount && emptyCount == craftingItemSlots.Count - Plank._requiredAmount)
+        if (CheckArraysAreSame(slotItemArray, Stick._requiredAmounts))
         {
-            GetItemForOutput(ItemType.PLANK, 4);
+            CheckAndOutput(Stick._recipe, Stick._itemType, 4);
         }
-        // Stick Recipe
-        else if (plankCount == Stick._requiredAmount && emptyCount == craftingItemSlots.Count - Stick._requiredAmount)
+        
+        if (CheckArraysAreSame(slotItemArray, Torch._requiredAmounts))
         {
-            CheckAndOutput(Stick._recipe, ItemType.STICK, 4);
+            CheckAndOutput(Torch._recipe, Torch._itemType, 4);
         }
-        // Torch Recipe
-        else if (coalCount == Torch._requiredAmount && stickCount == Torch._requiredAmount2 &&
-                 emptyCount == craftingItemSlots.Count - (Torch._requiredAmount + Torch._requiredAmount2))
+        
+        if (CheckArraysAreSame(slotItemArray, WoodenPickaxe._requiredAmounts))
         {
-            CheckAndOutput(Torch._recipe, ItemType.TORCH, 4);
+            CheckAndOutput(WoodenPickaxe._recipe, WoodenPickaxe._itemType, 1);
         }
-        // Wooden_Pickaxe Recipe
-        else if (plankCount == WoodenPickaxe._requiredAmount && stickCount == WoodenPickaxe._requiredAmount2 &&
-                 emptyCount == craftingItemSlots.Count - (WoodenPickaxe._requiredAmount + WoodenPickaxe._requiredAmount2))
+        
+        if (CheckArraysAreSame(slotItemArray, WoodenSword._requiredAmounts))
         {
-            CheckAndOutput(WoodenPickaxe._recipe, ItemType.WOODEN_PICKAXE, 1);
+            CheckAndOutput(WoodenSword._recipe, WoodenSword._itemType, 1);
         }
-        // Wooden_Sword Recipe
-        else if (plankCount == WoodenSword._requiredAmount && stickCount == WoodenSword._requiredAmount2 &&
-                 emptyCount == craftingItemSlots.Count - (WoodenSword._requiredAmount + WoodenSword._requiredAmount2))
+        
+        if (CheckArraysAreSame(slotItemArray, WoodenMedal._requiredAmounts))
         {
-            CheckAndOutput(WoodenSword._recipe, ItemType.WOODEN_SWORD, 1);
+            CheckAndOutput(WoodenMedal._recipe, WoodenMedal._itemType, 1);
         }
-        // Wooden_Medal Recipe
-        else if (stickCount == WoodenMedal._requiredAmount && plankCount == WoodenMedal._requiredAmount2 &&
-                 emptyCount == craftingItemSlots.Count - (WoodenMedal._requiredAmount + WoodenMedal._requiredAmount2))
+        
+        if (CheckArraysAreSame(slotItemArray, WoodenHelm._requiredAmounts))
         {
-            CheckAndOutput(WoodenMedal._recipe, ItemType.WOODEN_MEDAL, 1);
+            CheckAndOutput(WoodenHelm._recipe, WoodenHelm._itemType, 1);
         }
-        // Wooden_Helm Recipe
-        else if (plankCount == WoodenHelm._requiredAmount &&
-                 emptyCount == craftingItemSlots.Count - WoodenHelm._requiredAmount)
+        
+        if (CheckArraysAreSame(slotItemArray, WoodenKey._requiredAmounts))
         {
-            CheckAndOutput(WoodenHelm._recipe, ItemType.WOODEN_HELM, 1);
+            CheckAndOutput(WoodenKey._recipe, WoodenKey._itemType, 1);
         }
-        // Wooden_Key Recipe
-        else if (stickCount == WoodenKey._requiredAmount && 
-                 emptyCount == craftingItemSlots.Count - WoodenKey._requiredAmount)
-        {
-            CheckAndOutput(WoodenKey._recipe, ItemType.WOODEN_KEY, 1);
-        }
-        // else if (plankCount == 6)
-        // {
-        //     CheckAndOutput(Test2._recipe, ItemType.WOODEN_PICKAXE, 1);
-        // }
-        else
+        
+        // There is no valid recipe
+        if(!isValidRecipe)
         {
             CleanOutPutSlot();
         }
+    }
+    
+    bool CheckArraysAreSame(int[] slotItems, int[] requiredItems)
+    {
+        // No need to Check Arrays' size are different 
+        if (slotItems.Length != requiredItems.Length)
+        {
+            return false;
+        }
+        
+        for (int i = 1; i < slotItems.Length - 1; i++)
+        {
+            // No requirement and No useless Item for recipe
+            if (slotItems[i] == 0 && requiredItems[i] == 0)
+            {
+                continue;
+            }
+            // There is useless Item on the crafting slot
+            if (slotItems[i] > requiredItems[i])
+            {
+                return false;
+            }
+            // Ingredients not enough on the crafting slot
+            if (slotItems[i] < requiredItems[i] && requiredItems[i] > 0)
+            {
+                return false;
+            }
+        }
+        // All requirements are valid 
+        return true;
     }
 
     private void CheckAndOutput(int[,] recipe, ItemType itemType, int amount)
@@ -195,6 +190,7 @@ public class CraftingSystem : MonoBehaviour
                 // Exit and Display Output if we has found valid recipe
                 if (CheckPermutation(temp, recipe, itemType, amount))
                 {
+                    isValidRecipe = true;
                     return;
                 }
             }
