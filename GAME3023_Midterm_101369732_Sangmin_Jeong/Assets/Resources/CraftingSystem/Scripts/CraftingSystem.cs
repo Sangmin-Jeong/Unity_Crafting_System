@@ -10,8 +10,8 @@ using Image = UnityEngine.UI.Image;
 
 public class CraftingSystem : MonoBehaviour
 {
-    [SerializeField][Range(1,5)] public int column;
-    [SerializeField][Range(1,5)] public int row;
+    private int column = 0;
+    private int row = 0;
     
     public ItemSlot[,] craftingItemSlotsArray;
     List<ItemSlot> craftingItemSlots = new List<ItemSlot>();
@@ -23,12 +23,15 @@ public class CraftingSystem : MonoBehaviour
     [SerializeField] private Item[] _craftableItems;
 
     private bool isValidRecipe = false;
+
     void Start()
     {
         outputSlot = GameObject.Find("OutputSlot").GetComponent<ItemSlot>();
         outputSlot.OnTaken += ItemSlot_OnTaken;
         
         // Set flexible Crafting Array
+        row = CraftingManager.Instance.craftingRow;
+        column = CraftingManager.Instance.craftingColumn;
         Rect rect = craftingPanel.GetComponent<RectTransform>().rect;
         rect.width = column * 64f + 50f;
         craftingPanel.GetComponent<RectTransform>().sizeDelta = new Vector2(rect.width, rect.height);
@@ -66,7 +69,12 @@ public class CraftingSystem : MonoBehaviour
         // Load all Craftable Item scriptable objects
         _craftableItems = Resources.LoadAll<Item>("CraftingSystem/Items/Craftable_Ingredients");
     }
-    
+
+    public void SetRowNColumn(int r, int c)
+    {
+        row = r;
+        column = c;
+    }
     private void ItemSlot_OnTransferred(object sender, EventArgs e)
     {
         CheckRecipes();

@@ -239,6 +239,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _targetSlot: {fileID: 0}
+  ROW: 0
+  COLUMN: 0
 --- !u!1 &3443687717464274327
 GameObject:
   m_ObjectHideFlags: 0
@@ -359,8 +361,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c5321871910f71429bc25336f8294b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  icon: {fileID: 21300000, guid: 0b7590a507dc7074392c356f92f750d3, type: 3}
   _craftingSystem: {fileID: 0}
   _inventory: {fileID: 0}
+  craftingRow: 5
+  craftingColumn: 5
 --- !u!1 &6907582083420036640
 GameObject:
   m_ObjectHideFlags: 0

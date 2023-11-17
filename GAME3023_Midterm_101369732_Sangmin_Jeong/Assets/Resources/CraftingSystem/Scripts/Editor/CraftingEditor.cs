@@ -19,7 +19,6 @@ public class CraftingEditor : Editor
     private int column;
     private int amount;
     private string amountS;
-
     private int[,] recipeGrid = new int[,]{};
 
     private void OnEnable()
@@ -31,7 +30,30 @@ public class CraftingEditor : Editor
     public override void OnInspectorGUI()
     {
         base.OnInspectorGUI();
+        EditorGUILayout.Space(40);
+        EditorGUILayout.LabelField("======== Crafting Manager ========", EditorStyles.boldLabel);
+        EditorGUILayout.Space(10);
+        
+        // Load values from PlayerPrefs
+        craftingManager.craftingRow = PlayerPrefs.GetInt("CraftingRow", craftingManager.craftingRow);
+        craftingManager.craftingColumn = PlayerPrefs.GetInt("CraftingColumn", craftingManager.craftingColumn);
+        
+        // Crafting grid size sliders
+        EditorGUILayout.Space(20);
+        EditorGUILayout.LabelField("Crafting Grid Size", EditorStyles.boldLabel);
+        craftingManager.craftingRow = EditorGUILayout.IntSlider("Crafting Grid Row",craftingManager.craftingRow, 1, 5);
+        craftingManager.craftingColumn = EditorGUILayout.IntSlider("Crafting Grid Column",craftingManager.craftingColumn, 1, 5);
+        serializedObject.ApplyModifiedProperties();
 
+        // Save values to PlayerPrefs
+        PlayerPrefs.SetInt("CraftingRow", craftingManager.craftingRow);
+        PlayerPrefs.SetInt("CraftingColumn", craftingManager.craftingColumn);
+        PlayerPrefs.Save();
+        
+        EditorGUILayout.Space(20);
+
+        DrawDefaultInspector();
+        
         // Get a property from custom Editor script, the variable need to be [serializeField]
         SerializedProperty iconProperty = serializedObject.FindProperty("icon");
         
@@ -61,13 +83,17 @@ public class CraftingEditor : Editor
         
         if (GUILayout.Button("Create New Recipe Table"))
         {
-            if (int.TryParse(rowS, out row))
-            if (int.TryParse(columnS, out column))
-                
-            if (row > 0 && column > 0)
+            if (int.TryParse(rowS, out row)) {}
+            if (int.TryParse(columnS, out column)) {}
+            
+            if (row > 0 && column > 0 && recipeName != "")
             {
                 CreateRecipeTable(recipeName, row, column);
                 isDisplayed = true;
+            }
+            else
+            {
+                Debug.Log("Need to fill out Name, Row, and Column ! !");
             }
         }
         
@@ -79,17 +105,25 @@ public class CraftingEditor : Editor
                 DisplayRecipeTable(recipeGrid);
                 EditorGUILayout.LabelField("Amount of Output", EditorStyles.boldLabel);
                 amountS = EditorGUILayout.TextField("", amountS, EditorStyles.numberField);
-                if (int.TryParse(amountS, out amount))
+                if (int.TryParse(amountS, out amount)) {}
                 
                 if (GUILayout.Button("Create New Recipe"))
                 {
-                    AddNewRecipe();
-                    SetNewRecipe();
-                    AddNewItem();
-                    AddNewRecipeChecker();
-                    CreateNewItemSO();
+                    if (amount <= 0)
+                    {
+                        Debug.Log("Need to fill out Amount ! !");
+                    }
+                    else
+                    {
+                        AddNewRecipe();
+                        SetNewRecipe();
+                        AddNewItem();
+                        AddNewRecipeChecker();
+                        CreateNewItemSO();
 
-                    isDisplayed = false;
+                        isDisplayed = false;
+                    }
+
                 }
             }
         }

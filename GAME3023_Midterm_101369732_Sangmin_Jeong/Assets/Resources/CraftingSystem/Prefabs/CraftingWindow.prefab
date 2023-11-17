@@ -224,8 +224,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 450d1f2e5e8c4fe469ac021704e73267, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  column: 5
-  row: 5
+  column: 0
+  row: 0
   inventoryPanel: {fileID: 0}
   craftingPanel: {fileID: 4377811136666897880}
   _itemSlotPrefab: {fileID: 1098820302721575806, guid: 80fe0d3f727f69b428a6da25d5b7f260, type: 3}
