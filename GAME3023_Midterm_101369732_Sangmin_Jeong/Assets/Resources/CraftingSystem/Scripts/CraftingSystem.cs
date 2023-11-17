@@ -76,67 +76,6 @@ public class CraftingSystem : MonoBehaviour
     {
         ConsumeCraftSlots();
     }
-
-    private void CheckRecipes()
-    {   
-        // Create an array to check what ingredient we have and how many.
-        int[] slotItemArray = new int[(int)ItemType.COUNT];
-
-        foreach (ItemSlot itemSlot in craftingItemSlotsArray)
-        {
-            slotItemArray[(int)itemSlot.item.ItemType]++;
-        }
-        
-        isValidRecipe = false;
-        
-        // Check if we have enough ingredients for each recipe
-        if (CheckArraysAreSame(slotItemArray, Plank._requiredAmounts))
-        {
-            // Check if the ingredients are located correctly compare to recipe
-            CheckAndOutput(Plank._recipe, Plank._itemType, 4);
-        }
-        
-        if (CheckArraysAreSame(slotItemArray, Stick._requiredAmounts))
-        {
-            CheckAndOutput(Stick._recipe, Stick._itemType, 4);
-        }
-        
-        if (CheckArraysAreSame(slotItemArray, Torch._requiredAmounts))
-        {
-            CheckAndOutput(Torch._recipe, Torch._itemType, 4);
-        }
-        
-        if (CheckArraysAreSame(slotItemArray, WoodenPickaxe._requiredAmounts))
-        {
-            CheckAndOutput(WoodenPickaxe._recipe, WoodenPickaxe._itemType, 1);
-        }
-        
-        if (CheckArraysAreSame(slotItemArray, WoodenSword._requiredAmounts))
-        {
-            CheckAndOutput(WoodenSword._recipe, WoodenSword._itemType, 1);
-        }
-        
-        if (CheckArraysAreSame(slotItemArray, WoodenMedal._requiredAmounts))
-        {
-            CheckAndOutput(WoodenMedal._recipe, WoodenMedal._itemType, 1);
-        }
-        
-        if (CheckArraysAreSame(slotItemArray, WoodenHelm._requiredAmounts))
-        {
-            CheckAndOutput(WoodenHelm._recipe, WoodenHelm._itemType, 1);
-        }
-        
-        if (CheckArraysAreSame(slotItemArray, WoodenKey._requiredAmounts))
-        {
-            CheckAndOutput(WoodenKey._recipe, WoodenKey._itemType, 1);
-        }
-        
-        // There is no valid recipe
-        if(!isValidRecipe)
-        {
-            CleanOutPutSlot();
-        }
-    }
     
     bool CheckArraysAreSame(int[] slotItems, int[] requiredItems)
     {
@@ -286,5 +225,69 @@ public class CraftingSystem : MonoBehaviour
 
         CleanOutPutSlot();
         CheckRecipes();
+    }
+    
+        private void CheckRecipes()
+    {   
+        // Create an array to check what ingredient we have and how many.
+        int[] slotItemArray = new int[(int)ItemType.COUNT];
+
+        foreach (ItemSlot itemSlot in craftingItemSlotsArray)
+        {
+            slotItemArray[(int)itemSlot.item.ItemType]++;
+        }
+        
+        isValidRecipe = false;
+        
+        // Check if we have enough ingredients for each recipe
+        if (CheckArraysAreSame(slotItemArray, Plank._requiredAmounts))
+        {
+            // Check if the ingredients are located correctly compare to recipe
+            CheckAndOutput(Plank._recipe, Plank._itemType, 4);
+        }
+        
+        if (CheckArraysAreSame(slotItemArray, Stick._requiredAmounts))
+        {
+            CheckAndOutput(Stick._recipe, Stick._itemType, 4);
+        }
+        
+        if (CheckArraysAreSame(slotItemArray, Torch._requiredAmounts))
+        {
+            CheckAndOutput(Torch._recipe, Torch._itemType, 4);
+        }
+        
+        if (CheckArraysAreSame(slotItemArray, WoodenPickaxe._requiredAmounts))
+        {
+            CheckAndOutput(WoodenPickaxe._recipe, WoodenPickaxe._itemType, 1);
+        }
+        
+        if (CheckArraysAreSame(slotItemArray, WoodenSword._requiredAmounts))
+        {
+            CheckAndOutput(WoodenSword._recipe, WoodenSword._itemType, 1);
+        }
+        
+        if (CheckArraysAreSame(slotItemArray, WoodenMedal._requiredAmounts))
+        {
+            CheckAndOutput(WoodenMedal._recipe, WoodenMedal._itemType, 1);
+        }
+        
+        if (CheckArraysAreSame(slotItemArray, WoodenHelm._requiredAmounts))
+        {
+            CheckAndOutput(WoodenHelm._recipe, WoodenHelm._itemType, 1);
+        }
+        
+        if (CheckArraysAreSame(slotItemArray, WoodenKey._requiredAmounts))
+        {
+            CheckAndOutput(WoodenKey._recipe, WoodenKey._itemType, 1);
+        }
+        
+        // New Checker Line
+        //-
+        
+         
+        if(!isValidRecipe)
+        {
+            CleanOutPutSlot();
+        }
     }
 }

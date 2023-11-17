@@ -156,7 +156,8 @@ public static class LoadRecipe
         if (File.Exists("Assets/Resources/CraftingSystem/Recipes/" + recipeName  + ".txt"))
         {
             StreamReader sr = new StreamReader("Assets/Resources/CraftingSystem/Recipes/" + recipeName  + ".txt");
-
+            
+            // Check and Create new recipe array with TXT file
             int row = 0;
             int column = 0;
             while (!sr.EndOfStream)
@@ -167,6 +168,7 @@ public static class LoadRecipe
                 column = lines.Length;
             }
             
+            // Set values from TXT file on the array just made
             sr.BaseStream.Seek(0, SeekOrigin.Begin);
             for (int i = 0; i < row; i++)
             {
@@ -178,7 +180,6 @@ public static class LoadRecipe
                     if (int.TryParse(lines[j], out parsedInt))
                     {
                         recipe[i, j] = parsedInt;
-                        Debug.Log(recipe[i, j]);
                     }
                 }
             }
@@ -201,3 +202,5 @@ public static class LoadRecipe
     }
 }
 
+// New Recipe class Line
+//-

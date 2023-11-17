@@ -15,6 +15,7 @@ public class CraftingEditor : Editor
     private string columnS;
     private int row;
     private int column;
+    private int amount = 1;
 
     private int[,] recipeGrid = new int[,]{};
     public override void OnInspectorGUI()
@@ -62,6 +63,7 @@ public class CraftingEditor : Editor
                     AddNewRecipe();
                     SetNewRecipe();
                     AddNewItem();
+                    AddNewRecipeChecker();
                 }
             }
         }
@@ -72,6 +74,7 @@ public class CraftingEditor : Editor
 
     void SetNewRecipe()
     {
+        // Create TXT file for Recipe made from Editor script
         StreamWriter sw = new StreamWriter("Assets/Resources/CraftingSystem/Recipes/" + recipeName  + ".txt");
         
         for (int i = 0; i < row; i++)
@@ -87,53 +90,59 @@ public class CraftingEditor : Editor
     
     void AddNewRecipe()
     {
+        // To add new class recipe on the exist class script.
+        
         string scriptPath = "Assets/Resources/CraftingSystem/Scripts/RecipeType.cs";
             //= EditorUtility.OpenFilePanel("RecipeType", "Assets/Resources/CraftingSystem/Scripts/", "cs");
 
         if (string.IsNullOrEmpty(scriptPath))
         {
-            Debug.LogError("Script path is invalid or not selected.");
+            Debug.LogError("Script path is NOT valid or not selected");
             return;
         }
 
         string scriptContent = File.ReadAllText(scriptPath);
         
+        // Check if there is the same class recipe by name
         if (scriptContent.Contains($"public static class {recipeName}"))
         {
-            Debug.LogWarning($"Class '{recipeName}' already exists in the script.");
+            Debug.LogWarning($"Recipe '{recipeName}' already exists in the script");
             return;
         }
         
+        // Add new recipe class with string
         string newClassContent = $@"
 public static class {recipeName}
 {{
     public static string _recipeName;
     public static ItemType _itemType;
+    public static int[] _requiredAmounts = new int[(int)ItemType.COUNT];
     public static int[,] _recipe = new int[{row},{column}];
 
     static {recipeName}()
     {{
         _recipeName = ""{recipeName}"";
-        _itemType = ItemType.{recipeName.ToUpper()}
+        _itemType = ItemType.{recipeName.ToUpper()};
         LoadRecipe.LoadRecipeFromTxt(_recipeName, _recipe);
         LoadRecipe.SetRequiredAmount(_recipe, _requiredAmounts);
     }}
 }}
 ";
-        
+        // Add new recipe string to the original string of the recipe class
         scriptContent += newClassContent;
         File.WriteAllText(scriptPath, scriptContent);
         AssetDatabase.Refresh();
-        Debug.Log($"Class '{recipeName}' added to the script at: {scriptPath}");
+        Debug.Log($"Recipe Class '{recipeName}' added to the script");
     }
 
     void AddNewItem()
     {
+        // To Add new enum on the ItemType enum class
         string scriptPath = "Assets/Resources/CraftingSystem/Scripts/ItemType.cs";
 
         if (string.IsNullOrEmpty(scriptPath))
         {
-            Debug.LogError("Script path is invalid or not selected.");
+            Debug.LogError("Script path is NOT valid or not selected.");
             return;
         }
 
@@ -147,17 +156,44 @@ public static class {recipeName}
 
         string replacedContent = scriptContent.Replace(@"COUNT,
 }", $@"{recipeName.ToUpper()},
-COUNT,
+    COUNT,
 }}");
         
         scriptContent = replacedContent;
         File.WriteAllText(scriptPath, scriptContent);
         AssetDatabase.Refresh();
-        Debug.Log($"ItemType '{recipeName}' added to the enum at: {scriptPath}");
+        Debug.Log($"ItemType '{recipeName}' added to the enum");
+    }
+    
+    void AddNewRecipeChecker()
+    {
+        // To Add new enum on the ItemType enum class
+        string scriptPath = "Assets/Resources/CraftingSystem/Scripts/CraftingSystem.cs";
+
+        if (string.IsNullOrEmpty(scriptPath))
+        {
+            Debug.LogError("Script path is NOT valid or not selected.");
+            return;
+        }
+
+        string scriptContent = File.ReadAllText(scriptPath);
+        
+        string replacedContent = scriptContent.Replace("//-", $@"        
+        if (CheckArraysAreSame(slotItemArray, {recipeName}._requiredAmounts))
+        {{
+            CheckAndOutput({recipeName}._recipe, {recipeName}._itemType, {amount});
+        }}
+        //-");
+        scriptContent = replacedContent;
+        File.WriteAllText(scriptPath, scriptContent);
+        AssetDatabase.Refresh();
+        Debug.Log($"Checker '{recipeName}' added to the Checking process");
     }
     
     void CreateRecipeTable(string recipeName, int row, int column)
     {
+        // To Create base recipe grid.
+        // recipeGrid made by this, will be used for dropdown editor UI.
         recipeGrid = new int[row, column];
         
         EditorGUILayout.LabelField(recipeName + " Recipe", EditorStyles.boldLabel);
@@ -175,6 +211,7 @@ COUNT,
 
     void DisplayRecipeTable(int[,] recipe)
     {
+        // To display enum dropdown UI
         for (int i = 0; i < recipe.GetLength(0); i++)
         {
             GUILayout.BeginHorizontal();
