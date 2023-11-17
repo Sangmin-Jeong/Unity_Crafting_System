@@ -116,6 +116,7 @@ public static class {recipeName}
         _recipeName = ""{recipeName}"";
         _itemType = ItemType.{recipeName.ToUpper()}
         LoadRecipe.LoadRecipeFromTxt(_recipeName, _recipe);
+        LoadRecipe.SetRequiredAmount(_recipe, _requiredAmounts);
     }}
 }}
 ";
