@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: HeartNecklaces
   m_EditorClassIdentifier: 
   icon: {fileID: 21300000, guid: 90035afb9c37e7b439ce669d091fc1ba, type: 3}
-  ItemType: 12
-  Id: 12
+  ItemType: 11
+  Id: 11
   description: Description
   isConsumable: 0
